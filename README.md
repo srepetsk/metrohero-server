@@ -1,23 +1,13 @@
 # MetroHero Server
 
-## Compilation
-
-1. `sudo apt install openjdk-11-jre-headless`
-2. `apt install mvn`
-3. Run `mvn package`
-4. `zip -r metrohero.zip target`
-5. Move metrohero.zip up to the server
-
 ## Server Setup
 
 The setup instructions below are for Ubuntu 16.04. They may work for newer versions of Ubuntu or other Debian-based distros too, but some modifications of the commands provided may be required. YMMV.
 
-1. Install Oracle Java 9 JDK:
-    ```
-    sudo add-apt-repository ppa:webupd8team/java
-    sudo apt update
-    sudo apt install oracle-java9-installer
-    ```
+1. Install Java 17 JRE:
+	```
+	sudo apt install openjdk-17-jre-headless
+	```
 
 2. Set the server timezone. The local server timezone will be used to calculate upcoming train departure times, so is important to set properly.
 	```bash
@@ -46,7 +36,7 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
     createdb metrohero
     ```
 
-6. Create custom PostgreSQL routines:
+6. Create and load custom PostgreSQL routines:
     ```
     sudo su - postgres
     psql -f sql/sql_routines.sql
@@ -54,14 +44,16 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
 
 7. Edit `classes/application.properties` and set the correct Postgres password
 
-8. 
-	`ln -s classes/application.properties .`
-	`ln -s classes/logback.xml .`
+8. Symlink the properties and logging configuration files into the root directory of the project
+	```
+	ln -s classes/application.properties .
+	ln -s classes/logback.xml .
+	```
 
 7. Run the Spring Boot application targeting the `Application` Java class. This will populate the `metrohero` database. Once the application is running, stop it and continue to the next step to continue setup. See the Usage section of this README if you need help starting the server.
 
 8. Populate the `station_to_station_travel_time` table in the `metrohero` database
-	```sql
+	```bash
 	$ sudo su - postgresql
 	$ psql -f sql/station_to_station_travel_time.sql
 	```
@@ -76,7 +68,10 @@ Note, that LetsEncrypt certificates are valid for 90 days and require fairly-fre
 
 11. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
 
-12. Start the server:  `java -jar metrorailserver-1.0-SNAPSHOT.jar 2>&1 > out.log &`
+12. Launch the server inside `screen` so you can attach to it after-the-fact:
+	```screen -U
+	 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx8g"
+	```
 
 ## Usage
 

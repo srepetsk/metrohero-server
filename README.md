@@ -42,33 +42,78 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
     psql -f sql/sql_routines.sql
     ```
 
-7. Edit `classes/application.properties` and set the correct Postgres password
-
-8. Symlink the properties and logging configuration files into the root directory of the project
-	```
-	ln -s classes/application.properties .
-	ln -s classes/logback.xml .
+7. Build the application
+	```bash
+	mvn package
 	```
 
-7. Run the Spring Boot application targeting the `Application` Java class. This will populate the `metrohero` database. Once the application is running, stop it and continue to the next step to continue setup. See the Usage section of this README if you need help starting the server.
+8. Edit `target/classes/application.properties` and set the correct Postgres password
 
-8. Populate the `station_to_station_travel_time` table in the `metrohero` database
+9. Symlink the properties and logging configuration files into the root directory of the project - not inside the `target` or nested directories
+	```
+	ln -s src/main/resources/application.properties .
+	ln -s src/main/resources/logback.xml .
+	```
+
+10. Run the Spring Boot application targeting the `Application` Java class. This will populate the `metrohero` database. Once the application is running, stop it and continue to the next step to continue setup. See the Usage section of this README if you need help starting the server.
+
+	`mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx8g"`
+
+11. Populate the `station_to_station_travel_time` table in the `metrohero` database
+	Before running the sql statements, double-check that the database name (first line of the file) is correct; update if required.
 	```bash
 	$ sudo su - postgresql
 	$ psql -f sql/station_to_station_travel_time.sql
 	```
 
-9. Follow step 1 of the Usage section to populate your WMATA API keys
+	You should have 28 tables at the end of the table creation:
+	```
+	metrohero=# \dt
+				    List of relations
+	 Schema |                    Name                     | Type  |  Owner
+	--------+---------------------------------------------+-------+----------
+	 public | api_request                                 | table | postgres
+	 public | api_user                                    | table | postgres
+	 public | daily_service_report                        | table | postgres
+	 public | destination_code_mapping                    | table | postgres
+	 public | direction_metrics                           | table | postgres
+	 public | duplicate_train_event                       | table | postgres
+	 public | line_metrics                                | table | postgres
+	 public | line_metrics_direction_metrics_by_direction | table | postgres
+	 public | rail_incident                               | table | postgres
+	 public | speed_restriction                           | table | postgres
+	 public | station_problem_tweet                       | table | postgres
+	 public | station_tag                                 | table | postgres
+	 public | station_to_station_travel_time              | table | postgres
+	 public | station_to_station_trip                     | table | postgres
+	 public | system_metrics                              | table | postgres
+	 public | system_metrics_line_metrics_by_line         | table | postgres
+	 public | track_circuit                               | table | postgres
+	 public | train_car_problem_tweet                     | table | postgres
+	 public | train_departure                             | table | postgres
+	 public | train_departure_info                        | table | postgres
+	 public | train_disappearance                         | table | postgres
+	 public | train_expressed_station_event               | table | postgres
+	 public | train_offload                               | table | postgres
+	 public | train_prediction_accuracy_measurement       | table | postgres
+	 public | train_problem_tweet                         | table | postgres
+	 public | train_status                                | table | postgres
+	 public | train_tag                                   | table | postgres
+	 public | trip_state                                  | table | postgres
+	(28 rows)
+	```
 
-10. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
+12. Follow step 1 of the Usage section to populate your WMATA API keys
+
+13. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
 
 	`certbot certonly -d dcmetrohero.net --preferred-challenges dns --manual`
 
 Note, that LetsEncrypt certificates are valid for 90 days and require fairly-frequent renewal.
 
-11. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
+14. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
 
-12. Launch the server inside `screen` so you can attach to it after-the-fact:
+15. Launch the server inside `screen` so you can attach to it after-the-fact:
 	```screen -U
 	 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx8g"
 	```
@@ -82,3 +127,9 @@ Note, that LetsEncrypt certificates are valid for 90 days and require fairly-fre
 5. If you're using IntelliJ or another fully-featured IDE, you can use the autoconfigured Spring configuration (targeting the `Application` Java class) to start the server for development purposes, otherwise you can use `sudo mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx16g"`, e.g. in a production environment.
 6. If you're running the server locally, navigate to https://localhost:9443/ to start using the webapp with it connected to your server.
 7. If the logs are a little too noisy for your use case, e.g. in production, consider setting the `logging.level.com.jamespizzurro.metrorailserver` property in src/main/resources/application.properties to WARN instead of INFO, or set it to DEBUG to get even more log output for debugging purposes.
+
+## Configuration
+
+Set the length of data to store
+* Edit src/main/java/com/jamespizzurro/metrorailserver/repository/TrainStatusRepository.java
+* On line 39, set '24 months' to the length of time that you wish to store data for'

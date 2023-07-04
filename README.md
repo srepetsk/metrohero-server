@@ -18,6 +18,11 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
     sudo apt update
     sudo apt install oracle-java9-installer
     ```
+
+2. Set the server timezone. The local server timezone will be used to calculate upcoming train departure times, so is important to set properly.
+	```bash
+	timedatectl set-timezone America/New_York
+	```
    
 3. Install PostgreSQL 10:
 	```

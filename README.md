@@ -82,3 +82,29 @@ Note, that LetsEncrypt certificates are valid for 90 days and require fairly-fre
 5. If you're using IntelliJ or another fully-featured IDE, you can use the autoconfigured Spring configuration (targeting the `Application` Java class) to start the server for development purposes, otherwise you can use `sudo mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx16g"`, e.g. in a production environment.
 6. If you're running the server locally, navigate to https://localhost:9443/ to start using the webapp with it connected to your server.
 7. If the logs are a little too noisy for your use case, e.g. in production, consider setting the `logging.level.com.jamespizzurro.metrorailserver` property in src/main/resources/application.properties to WARN instead of INFO, or set it to DEBUG to get even more log output for debugging purposes.
+
+## Adding a new infill station
+When adding a new infill Metrorail station, such as Potomac Yard, there are a number of files that need to be updated.
+
+Beginning with the Webapp frontend:
+* Use [Rail Station Information](https://api.wmata.com/Rail.svc/json/jStationInfo?StationCode=C11) API endpoint in order to grab the info block about the new station(s). This will include Lat/Long, address, and other information needed for MetroHero.
+* `src/{blue,yellow,silver,red,green,orange}_stations.json`
+	* Edit the relevant file(s). If a station is used by multiple lines, all files should be updated
+	* Use the Rail Station Information endpoint to populate this
+* src/components/Line.js
+	* For an infill station, the station links on either side may need to be updated; for instance, links from C10 to C12 need to be split and modified so C10-C11 and C11-C12, rather than C10-C12, for a C11 infill station
+
+Server repo:
+* src/main/resources/stations.csv
+	* Add the new station to the list, along with names that the station is referenced as
+
+## Station location track circuits
+(Look for the track circuits of 600' length)
+
+* C10-C1: 1010
+* C11-C1: 3493
+* C12-C1: 976
+
+* C10-C2: 1204
+* C11-C2: 3512
+* C12-C2: 1170

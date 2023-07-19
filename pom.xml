@@ -165,22 +165,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- <configuration>
-                    <image>
-                        <builder>paketobuildpacks/builder-jammy-tiny</builder>
-                        <buildpacks>
-                            <buildpack>paketo-buildpacks/ca-certificates</buildpack>
-                            <buildpack>gcr.io/paketo-buildpacks/microsoft-openjdk</buildpack>
-                            <buildpack>paketo-buildpacks/syft</buildpack>
-                            <buildpack>paketo-buildpacks/executable-jar</buildpack>
-                            <buildpack>paketo-buildpacks/dist-zip</buildpack>
-                            <buildpack>paketo-buildpacks/spring-boot</buildpack>
-                        </buildpacks>
-                        <env>
-                            <BP_JVM_VERSION>17</BP_JVM_VERSION>
-                        </env>
-                    </image>
-                </configuration> -->
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>

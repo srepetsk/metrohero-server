@@ -4,7 +4,7 @@
 
 The setup instructions below assume that docker or docker desktop have already been installed and configured on your machine. Starting in the metrohero-server directory...
 
-1. Follow instruction is Usage notes 1 to obtain WMATA keys.
+1. Follow instructions in Usage note 1 to obtain WMATA keys.
 
 2. Add WMATA keys to the application-dev.properties file, replacing the "\<populate\>" 
 

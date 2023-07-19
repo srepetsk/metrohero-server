@@ -1,5 +1,60 @@
 # MetroHero Server
 
+## Local Development Environment Setup
+
+The setup instructions below assume that docker or docker desktop have already been installed and configured on your machine. Starting in the metrohero-server directory...
+
+1. Build the spring boot jar file:
+	```
+	mvn clean package
+	```
+
+2. Build the spring boot docker image:
+	```
+	docker build --tag=metrorailserver:1.0-SNAPSHOT .
+	```
+
+3. Spin up the spring boot image and postgres with docker compose:
+	```
+	docker compose up
+	```
+
+4. Once postgres and spring boot have started, open another terminal and populate the station_to_station_travel_time table in postgres:
+	```
+	docker exec -it metrohero-server-db-1 bash -c "psql -U postgres -d metrohero -f ./home/station_to_station_travel_time.sql"
+	```
+
+5. Once step 4 is complete, restart docker compose to ensure changes are picked up:
+	```
+	docker compose restart
+	```
+
+Your local development metrohero server is now up and running. Debugging can be attached using port 5005. Usage notes 1, 2, 3, and 7 below still apply.
+
+To connect a front-end for development, follow the instructions in the metrohero-webapp repository.
+
+To apply new changes to the docker image run the following commands
+
+1. Bring docker compose down:
+	```
+	docker compose down
+	```
+
+2. Build the spring boot jar file:
+	```
+	mvn clean package
+	```
+
+3. Build the spring boot docker image:
+	```
+	docker build --tag=metrorailserver:1.0-SNAPSHOT .
+	```
+
+4. Spin up the spring boot image and postgres with docker compose:
+	```
+	docker compose up
+	```
+
 ## Server Setup
 
 The setup instructions below are for Ubuntu 16.04. They may work for newer versions of Ubuntu or other Debian-based distros too, but some modifications of the commands provided may be required. YMMV.

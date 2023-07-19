@@ -9,9 +9,9 @@ DELETE FROM public.station_to_station_travel_time WHERE station_codes_key = 'C10
 DELETE FROM public.station_to_station_travel_time WHERE station_codes_key = 'C12_C10';
 
 -- C1
-INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C12_C11', 6814, 'C11', '2023-07-09 16:49:00.000000', 'C11') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;
+INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C12_C11', 6814, 'C12', '2023-07-09 16:49:00.000000', 'C11') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;
 INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C11_C10', 8703, 'C11', '2023-07-09 16:49:00.000000', 'C10') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;
 
 -- C2
 INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C10_C11', 9137, 'C10', '2023-07-09 16:49:00.000000', 'C11') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;
-INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C11_C12', 6814, 'C11', '2023-07-09 16:49:00.000000', 'C12') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;
+INSERT INTO public.station_to_station_travel_time (station_codes_key, distance, from_station_code, last_updated, to_station_code) VALUES ('C11_C12', 7579, 'C11', '2023-07-09 16:49:00.000000', 'C12') ON CONFLICT (station_codes_key) DO UPDATE SET distance = EXCLUDED.distance;

@@ -58,17 +58,19 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
 	$ psql -f sql/station_to_station_travel_time.sql
 	```
 
-9. Follow step 1 of the Usage section to populate your WMATA API keys
+9. Run any additional numbered scripts in the `sql` directory, in the order they are numbered.
 
-10. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
+10. Follow step 1 of the Usage section to populate your WMATA API keys
+
+11. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
 
 	`certbot certonly -d dcmetrohero.net --preferred-challenges dns --manual`
 
 Note, that LetsEncrypt certificates are valid for 90 days and require fairly-frequent renewal.
 
-11. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
+12. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
 
-12. Launch the server inside `screen` so you can attach to it after-the-fact:
+13. Launch the server inside `screen` so you can attach to it after-the-fact:
 	```screen -U
 	 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx8g"
 	```
@@ -90,13 +92,19 @@ Beginning with the Webapp frontend:
 * Use [Rail Station Information](https://api.wmata.com/Rail.svc/json/jStationInfo?StationCode=C11) API endpoint in order to grab the info block about the new station(s). This will include Lat/Long, address, and other information needed for MetroHero.
 * `src/{blue,yellow,silver,red,green,orange}_stations.json`
 	* Edit the relevant file(s). If a station is used by multiple lines, all files should be updated
-	* Use the Rail Station Information endpoint to populate this
+	* Use the WMATA Rail Station Information API endpoint to populate this
 * src/components/Line.js
 	* For an infill station, the station links on either side may need to be updated; for instance, links from C10 to C12 need to be split and modified so C10-C11 and C11-C12, rather than C10-C12, for a C11 infill station
+* src/stores/LineStore.js
+* src/stores/MareyDiagramStore.js
 
 Server repo:
 * src/main/resources/stations.csv
 	* Add the new station to the list, along with names that the station is referenced as
+* src/main/resources/StandardRoutes.json
+  * For each station platform track circuit, set the station code (i.e. "C11") to associate the two
+* src/main/resources/station_durations.csv
+  * Use [WMATA Trip Planner](https://wmata.com) to determine the time in minutes between the new station and its left and right pairs. Insert this, using the station codes as columns 1 and 2, as the 3rd column
 
 ## Station location track circuits
 (Look for the track circuits of 600' length)
@@ -108,3 +116,6 @@ Server repo:
 * C10-C2: 1204
 * C11-C2: 3512
 * C12-C2: 1170
+
+## Configure length of train tracking history
+By default, MetroHero will attmept to store up to 24 months of historical train location data. This configuration can be found in `src/main/java/com/jamespizzurro/metrorailserver/repository/TrainStatusRepository.java`, and adjusted up or down as appropriate for your environment. A lower history setting is likely more appropriate for a dev, rather than a production, environment.

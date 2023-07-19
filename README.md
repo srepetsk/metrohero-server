@@ -4,27 +4,31 @@
 
 The setup instructions below assume that docker or docker desktop have already been installed and configured on your machine. Starting in the metrohero-server directory...
 
-1. Build the spring boot jar file:
+1. Follow instruction is Usage notes 1 to obtain WMATA keys.
+
+2. Add WMATA keys to the application-dev.properties file, replacing the "\<populate\>" 
+
+3. Build the spring boot jar file:
 	```
 	mvn clean package
 	```
 
-2. Build the spring boot docker image:
+4. Build the spring boot docker image:
 	```
 	docker build --tag=metrorailserver:1.0-SNAPSHOT .
 	```
 
-3. Spin up the spring boot image and postgres with docker compose:
+5. Spin up the spring boot image and postgres with docker compose:
 	```
 	docker compose up
 	```
 
-4. Once postgres and spring boot have started, open another terminal and populate the station_to_station_travel_time table in postgres:
+6. Once postgres and spring boot have started, open another terminal and populate the station_to_station_travel_time table in postgres:
 	```
 	docker exec -it metrohero-server-db-1 bash -c "psql -U postgres -d metrohero -f ./home/station_to_station_travel_time.sql"
 	```
 
-5. Once step 4 is complete, restart docker compose to ensure changes are picked up:
+7. Once step 4 is complete, restart docker compose to ensure changes are picked up:
 	```
 	docker compose restart
 	```

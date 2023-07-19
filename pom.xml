@@ -136,11 +136,51 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- <configuration>
+                    <image>
+                        <builder>paketobuildpacks/builder-jammy-tiny</builder>
+                        <buildpacks>
+                            <buildpack>paketo-buildpacks/ca-certificates</buildpack>
+                            <buildpack>gcr.io/paketo-buildpacks/microsoft-openjdk</buildpack>
+                            <buildpack>paketo-buildpacks/syft</buildpack>
+                            <buildpack>paketo-buildpacks/executable-jar</buildpack>
+                            <buildpack>paketo-buildpacks/dist-zip</buildpack>
+                            <buildpack>paketo-buildpacks/spring-boot</buildpack>
+                        </buildpacks>
+                        <env>
+                            <BP_JVM_VERSION>17</BP_JVM_VERSION>
+                        </env>
+                    </image>
+                </configuration> -->
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -165,6 +205,12 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>

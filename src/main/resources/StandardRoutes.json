@@ -497,7 +497,7 @@
         {
           "SeqNum": 100,
           "CircuitId": 3493,
-          "StationCode": null
+          "StationCode": "C11"
         },
         {
           "SeqNum": 101,
@@ -2588,7 +2588,7 @@
         {
           "SeqNum": 103,
           "CircuitId": 3512,
-          "StationCode": null
+          "StationCode": "C11"
         },
         {
           "SeqNum": 104,
@@ -20422,7 +20422,7 @@
         {
           "SeqNum": 52,
           "CircuitId": 3493,
-          "StationCode": null
+          "StationCode": "C11"
         },
         {
           "SeqNum": 53,
@@ -21548,7 +21548,7 @@
         {
           "SeqNum": 51,
           "CircuitId": 3512,
-          "StationCode": null
+          "StationCode": "C11"
         },
         {
           "SeqNum": 52,

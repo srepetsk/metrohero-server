@@ -24,7 +24,7 @@ public class DashboardController {
         this.metricsService = metricsService;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "${server.protocol}://${server.url}")
     @RequestMapping(value = "/history/dashboard", method = RequestMethod.POST)
     public DashboardHistoryResponse getDashboardHistory(
             @RequestParam int interval,
@@ -34,13 +34,13 @@ public class DashboardController {
         return metricsService.getDashboardHistory(interval, observedDateTimestampMin, observedDateTimestampMax);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "${server.protocol}://${server.url}")
     @RequestMapping(value = "/history/performance", method = RequestMethod.POST)
     public List<PerformanceSummary> getPerformanceSummary() {
         return this.metricsService.getPerformanceSummary();
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "${server.protocol}://${server.url}")
     @RequestMapping(value = "/history/performance/byTimeOfDay", method = RequestMethod.POST)
     public List<PerformanceSummary> getHourlyPerformanceSummary(
             @RequestParam Long fromUnixTimestamp,

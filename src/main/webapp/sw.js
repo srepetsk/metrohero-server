@@ -1,4 +1,4 @@
-var CACHE_NAME = '91b15e23-de9e-43d7-b18c-ea3dcf5f61a3';
+var CACHE_NAME = '102fa899-d85c-47a7-ae49-85f507cfce69';
 
 var URLS_TO_CACHE = [
   // PAGES
@@ -12,9 +12,9 @@ var URLS_TO_CACHE = [
   '/safetrack.html',
 
   // CSS AND JS
-  '/styles/main.css?v=91b15e23-de9e-43d7-b18c-ea3dcf5f61a3',
-  '/js/polyfill.min.js?v=91b15e23-de9e-43d7-b18c-ea3dcf5f61a3',
-  '/js/app.js?v=91b15e23-de9e-43d7-b18c-ea3dcf5f61a3',
+  '/styles/main.css?v=102fa899-d85c-47a7-ae49-85f507cfce69',
+  '/js/polyfill.min.js?v=102fa899-d85c-47a7-ae49-85f507cfce69',
+  '/js/app.js?v=102fa899-d85c-47a7-ae49-85f507cfce69',
 
   // IMAGES
   '/favicon.ico?v=OmyXOvd7JZ',

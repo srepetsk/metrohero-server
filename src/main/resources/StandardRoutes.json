@@ -460,11 +460,6 @@
           "StationCode": null
         },
         {
-          "SeqNum": 91,
-          "CircuitId": 985,
-          "StationCode": null
-        },
-        {
           "SeqNum": 92,
           "CircuitId": 3487,
           "StationCode": null
@@ -487,11 +482,6 @@
         {
           "SeqNum": 96,
           "CircuitId": 3491,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 97,
-          "CircuitId": 991,
           "StationCode": null
         },
         {
@@ -547,11 +537,6 @@
         {
           "SeqNum": 108,
           "CircuitId": 3501,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 109,
-          "CircuitId": 995,
           "StationCode": null
         },
         {
@@ -2626,11 +2611,6 @@
           "StationCode": null
         },
         {
-          "SeqNum": 108,
-          "CircuitId": 1187,
-          "StationCode": null
-        },
-        {
           "SeqNum": 109,
           "CircuitId": 1187,
           "StationCode": null
@@ -2663,11 +2643,6 @@
         {
           "SeqNum": 115,
           "CircuitId": 3502,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 116,
-          "CircuitId": 1193,
           "StationCode": null
         },
         {
@@ -20455,11 +20430,6 @@
           "StationCode": null
         },
         {
-          "SeqNum": 42,
-          "CircuitId": 985,
-          "StationCode": null
-        },
-        {
           "SeqNum": 43,
           "CircuitId": 985,
           "StationCode": null
@@ -20487,11 +20457,6 @@
         {
           "SeqNum": 48,
           "CircuitId": 3491,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 49,
-          "CircuitId": 991,
           "StationCode": null
         },
         {
@@ -20547,11 +20512,6 @@
         {
           "SeqNum": 60,
           "CircuitId": 3501,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 61,
-          "CircuitId": 995,
           "StationCode": null
         },
         {
@@ -21661,11 +21621,6 @@
           "StationCode": null
         },
         {
-          "SeqNum": 56,
-          "CircuitId": 1187,
-          "StationCode": null
-        },
-        {
           "SeqNum": 57,
           "CircuitId": 1187,
           "StationCode": null
@@ -21698,11 +21653,6 @@
         {
           "SeqNum": 63,
           "CircuitId": 3502,
-          "StationCode": null
-        },
-        {
-          "SeqNum": 64,
-          "CircuitId": 1193,
           "StationCode": null
         },
         {

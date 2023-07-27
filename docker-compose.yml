@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    image: postgres:10-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=metrohero
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass_test
+      - PGUSER=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "--username", "postgres", "--dbname", "metrohero"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/sql_routines.sql:/docker-entrypoint-initdb.d/1-sql_routines.sql
+      - ./sql/station_to_station_travel_time.sql:/home/station_to_station_travel_time.sql
+
+  app:
+    image: metrorailserver:1.0-SNAPSHOT
+    ports:
+      - '9443:9443'
+      - '5005:5005'
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/metrohero
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: pass_test
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - appdata:/Users/larryballance/metroherodata/server
+
+volumes:
+  pgdata:
+  appdata:

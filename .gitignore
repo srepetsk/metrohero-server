@@ -14,8 +14,12 @@ hs_err_pid*
 .idea
 target
 *.iml
+.project
+.classpath
 
 /gtfs/
 /logs/
+/.settings/
+/.vscode/
 
 /track-circuit-diagram.gv.txt

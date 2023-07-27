@@ -69,10 +69,10 @@ CREATE AGGREGATE weighted_stddev(var numeric, weight numeric)
 );
 COMMENT ON AGGREGATE weighted_stddev(numeric, numeric) IS 'Usage: select weighted_stddev(var::numeric, weight::numeric) from X;';
 
-CREATE AGGREGATE array_accum (anyarray)
+CREATE AGGREGATE array_accum (anycompatiblearray)
 (
     sfunc = array_cat,
-    stype = anyarray,
+    stype = anycompatiblearray,
     initcond = '{}'
 );
 

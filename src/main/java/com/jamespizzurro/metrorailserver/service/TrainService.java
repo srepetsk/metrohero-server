@@ -2416,17 +2416,29 @@ public class TrainService {
 
         // cache database table for easy access
         Map<String, StationToStationTravelTime> stationToStationInfoMap = new HashMap<>();
-        Map<String, Double> stationToStationDurationMap = new HashMap<>();
-        Map<String, Double> stationToStationMedianDurationMap = new HashMap<>();
-        for (StationToStationTravelTime ststt : this.stationToStationTravelTimeRepository.findAll()) {
-            stationToStationInfoMap.put(ststt.getStationCodesKey(), ststt);
+        Map<String, Double> stationToStationDurationMap = new ConcurrentHashMap<>();
+        Map<String, Double> stationToStationMedianDurationMap = new ConcurrentHashMap<>();
+        this.stationToStationTravelTimeRepository.findAll().forEach(ststt -> stationToStationInfoMap.put(ststt.getStationCodesKey(), ststt));
 
-            BigDecimal rawRecentAverageTripDuration = this.stationToStationTripRepository.getRecentAverageTripDuration(ststt.getFromStationCode(), ststt.getToStationCode());
-            stationToStationDurationMap.put(ststt.getStationCodesKey(), (rawRecentAverageTripDuration != null) ? rawRecentAverageTripDuration.doubleValue() : 999d);
+        // Fetch pre-calculated statistics from the Materialized View
+        logger.info("...fetching trip statistics from materialized view...");
+        String sql = "SELECT departing_station_code, arriving_station_code, recent_avg_duration, median_duration " +
+                     "FROM station_trip_stats_mv";
 
-            BigDecimal rawMedianTripDuration = this.stationToStationTripRepository.getMedianTripDuration(ststt.getFromStationCode(), ststt.getToStationCode());
-            stationToStationMedianDurationMap.put(ststt.getStationCodesKey(), (rawMedianTripDuration != null) ? rawMedianTripDuration.doubleValue() : 999d);
-        }
+        this.namedParameterJdbcTemplate.query(sql, new HashMap<>(), (rs) -> {
+            String key = rs.getString("departing_station_code") + "_" + rs.getString("arriving_station_code");
+            double avg = rs.getDouble("recent_avg_duration");
+            if (!rs.wasNull()) stationToStationDurationMap.put(key, avg);
+
+            double median = rs.getDouble("median_duration");
+            if (!rs.wasNull()) stationToStationMedianDurationMap.put(key, median);
+        });
+
+        // Fill in any missing values with the default 999d
+        stationToStationInfoMap.keySet().forEach(key -> {
+            stationToStationDurationMap.putIfAbsent(key, 999d);
+            stationToStationMedianDurationMap.putIfAbsent(key, 999d);
+        });
 
         // derive trip durations for every combination of valid to/from stations using cached neighboring station trip durations
         Map<String, Double> derivedStationToStationDurationMap = new HashMap<>(stationToStationDurationMap);
@@ -2462,6 +2474,25 @@ public class TrainService {
 
         logger.info("...successfully built station-to-station duration and trip maps!");
     }
+
+    /**
+     * Refreshes the materialized view that stores pre-calculated trip statistics.
+     * <p>
+     * This view (station_trip_stats_mv) must exist in the database for the application
+     * to start up efficiently. See sql/create_station_trip_stats_mv.sql for definition.
+     */
+    @Scheduled(fixedDelay = 300000) // Run every 5 minutes
+    public void refreshTripStatsView() {
+        logger.info("Refreshing materialized view station_trip_stats_mv...");
+        try {
+            // Refresh concurrently so we don't lock the view during the update
+            namedParameterJdbcTemplate.getJdbcOperations().execute("REFRESH MATERIALIZED VIEW CONCURRENTLY station_trip_stats_mv");
+            logger.info("...successfully refreshed materialized view!");
+        } catch (Exception e) {
+            logger.error("Failed to refresh materialized view!", e);
+        }
+    }
+
     private Double getStationToStationTripDuration(Map<String, Double> stationToStationDurationMap, Set<String> availableStationCodes, String fromStationCode, String toStationCode) {
         if (StringUtils.isEmpty(fromStationCode) || StringUtils.isEmpty(toStationCode) || fromStationCode.equals(toStationCode) || availableStationCodes == null || availableStationCodes.isEmpty()) {
             return null;

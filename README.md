@@ -28,7 +28,12 @@ The setup instructions below assume that docker or docker desktop have already b
 	docker exec -it metrohero-server-db-1 bash -c "psql -U postgres -d metrohero -f ./home/station_to_station_travel_time.sql"
 	```
 
-7. Once step 4 is complete, restart docker compose to ensure changes are picked up:
+7. Create the materialized view for trip statistics:
+	```
+	docker exec -it metrohero-server-db-1 bash -c "psql -U postgres -d metrohero -f ./home/create_station_trip_stats_mv.sql"
+	```
+
+8. Once step 4 is complete, restart docker compose to ensure changes are picked up:
 	```
 	docker compose restart
 	```
@@ -117,19 +122,25 @@ The setup instructions below are for Ubuntu 16.04. They may work for newer versi
 	$ psql -f sql/station_to_station_travel_time.sql
 	```
 
-9. Run any additional numbered scripts in the `sql` directory, in the order they are numbered.
+9. Create the materialized view for trip statistics:
+	```bash
+	$ sudo su - postgresql
+	$ psql -f sql/create_station_trip_stats_mv.sql
+	```
 
-10. Follow step 1 of the Usage section to populate your WMATA API keys
+10. Run any additional numbered scripts in the `sql` directory, in the order they are numbered.
 
-11. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
+11. Follow step 1 of the Usage section to populate your WMATA API keys
+
+12. Get an SSL certificate for your installation. MetroHero will require a P12-format file with the private key and the public certificate available to the Java Spring application. This developer prefers LetsEncrypt, doing something like:
 
 	`certbot certonly -d dcmetrohero.net --preferred-challenges dns --manual`
 
 Note, that LetsEncrypt certificates are valid for 90 days and require fairly-frequent renewal.
 
-12. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
+13. Generate your combined P12 file: `pkcs12 -in /etc/letsencrypt/live/dcmetrohero.net/fullchain.pem -inkey /etc/letsencrypt/live/dcmetrohero.net/privkey.pem -export -out keystore.p12`
 
-13. Launch the server inside `screen` so you can attach to it after-the-fact:
+14. Launch the server inside `screen` so you can attach to it after-the-fact:
 	```screen -U
 	 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx8g"
 	```

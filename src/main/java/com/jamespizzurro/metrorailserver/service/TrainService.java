@@ -2481,7 +2481,7 @@ public class TrainService {
      * This view (station_trip_stats_mv) must exist in the database for the application
      * to start up efficiently. See sql/create_station_trip_stats_mv.sql for definition.
      */
-    @Scheduled(cron = "0 0 4 * * *") // Run nightly at 4 AM
+    @Scheduled(fixedDelay = 300000) // Run every 5 minutes
     public void refreshTripStatsView() {
         logger.info("Refreshing materialized view station_trip_stats_mv...");
         try {

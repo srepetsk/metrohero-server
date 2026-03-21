@@ -178,3 +178,15 @@ Server repo:
 
 ## Configure length of train tracking history
 By default, MetroHero will attmept to store up to 24 months of historical train location data. This configuration can be found in `src/main/java/com/jamespizzurro/metrorailserver/repository/TrainStatusRepository.java`, and adjusted up or down as appropriate for your environment. A lower history setting is likely more appropriate for a dev, rather than a production, environment.
+
+## Handling Route Changes
+When a Metrorail line's route changes (e.g. Yellow Line extension to Greenbelt), the following updates are required:
+
+1. **Update Station Lists (Webapp):**
+   - Edit the relevant `src/<color>_stations.json` file(s) in the `metrohero-webapp` repository.
+   - Ensure the station order reflects the new route and that `LineCode` properties are updated for all affected stations.
+
+2. **Update Standard Routes:**
+   - Use the WMATA Standard Routes API (https://developer.wmata.com/) to fetch the latest track circuit sequences.
+   - Update `src/main/resources/StandardRoutes.json` in the `metrohero-server` repository with the response data.
+   - Update `src/standard-routes.json` in the `metrohero-webapp` repository with the same data.
